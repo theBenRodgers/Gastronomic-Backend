@@ -10,7 +10,7 @@ This guide provides instructions to set up a Python virtual environment and inst
 
 ### On Mac/Linux
 1. Open a terminal.
-2. Navigate to the ./Scripts/ directory.
+2. Navigate to the directory where the script is located.
 3. Give the script executable permission:
    ```bash
    chmod +x setup_venv.sh
@@ -22,7 +22,7 @@ This guide provides instructions to set up a Python virtual environment and inst
 
 ### On Windows (Command Prompt)
 1. Open **Command Prompt** (`cmd`).
-2. Navigate to the ./Scripts/ directory.
+2. Navigate to the directory where the script is located using `cd`.
 3. Run the script:
    ```cmd
    setup_venv.bat
@@ -30,7 +30,7 @@ This guide provides instructions to set up a Python virtual environment and inst
 
 ### On Windows (PowerShell)
 1. Open **PowerShell**.
-2. Navigate to the ./Scripts/ directory.
+2. Navigate to the directory where the script is located.
 3. If running for the first time, allow script execution:
    ```powershell
    Set-ExecutionPolicy Unrestricted -Scope Process
