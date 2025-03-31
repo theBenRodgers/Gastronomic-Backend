@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 import requests
-from app.config import get_firebase_user_from_token  # Your authentication logic
+from app.config import get_firebase_user_from_token
 
 router = APIRouter()
 
-SPOONACULAR_API_KEY = "e7c9b3ec20df45f5afaf1e18f3bfe0d7"  # Your Spoonacular API key
+SPOONACULAR_API_KEY = "e7c9b3ec20df45f5afaf1e18f3bfe0d7"
 SPOONACULAR_API_URL = "https://api.spoonacular.com/recipes/findByIngredients"
 
 
