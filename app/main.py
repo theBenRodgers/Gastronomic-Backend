@@ -1,27 +1,28 @@
-from app.routers.ingredients import router
 from fastapi import FastAPI
-
-import firebase_admin
 from fastapi.middleware.cors import CORSMiddleware
+import firebase_admin
 
-# importing config will also call load_dotenv to get GOOGLE_APPLICATION_CREDENTIALS
 from app.config import get_settings
-
+from app.routers.ingredients import router as ingredients_router
+from app.routers.recipes import router as recipes_router
 
 app = FastAPI()
-app.include_router(router)
+
+# Include routers
+app.include_router(ingredients_router)
+app.include_router(recipes_router)
+
 settings = get_settings()
 origins = [settings.frontend_url]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
-firebase_admin.initialize_app()
-
-# Debug, check app is correctly
-print("Current App Name:", firebase_admin.get_app().project_id)
+# Initialize Firebase Admin SDK
+if not firebase_admin._apps:
+    firebase_admin.initialize_app()
