@@ -32,4 +32,6 @@ async def search_recipes(ingredients: str, user: dict = Depends(get_firebase_use
         recipes = response.json()
         return {"recipes": recipes}
     else:
+        # Log the response content for debugging
+        print("Spoonacular API error:", response.text)
         raise HTTPException(status_code=500, detail="Failed to fetch recipes from Spoonacular")
