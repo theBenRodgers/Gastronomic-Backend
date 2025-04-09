@@ -2,7 +2,7 @@ import sqlite3
 from app.schemas.ingredient import Ingredient
 
 def get_db_connection():
-    conn = sqlite3.connect(r"C:\Gastronomic-Backend\sql\gastronomic.db")
+    conn = sqlite3.connect(r"C:\Gastronomic-Backend\sql\gastronomic.db", check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
