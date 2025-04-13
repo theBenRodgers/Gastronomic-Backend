@@ -1,37 +1,45 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from typing import List
 import requests
 from app.config import get_firebase_user_from_token
+from app.config import SPOONACULAR_API_KEY
+from app.schemas.basemodels.recipe import Recipe
+from app.schemas.basemodels.ingredient import Ingredient
 
 router = APIRouter()
 
-SPOONACULAR_API_KEY = "e7c9b3ec20df45f5afaf1e18f3bfe0d7"
 SPOONACULAR_API_URL = "https://api.spoonacular.com/recipes/findByIngredients"
 
-
-# Pydantic model to accept ingredients input
-class IngredientsRequest(BaseModel):
-    ingredients: str  # Comma-separated ingredients
-
-
-# Endpoint to fetch recipes from Spoonacular API based on ingredients
-@router.get("/search-recipes", response_model=dict)
+@router.get("/search-recipes", response_model=List[Recipe])
 async def search_recipes(ingredients: str, user: dict = Depends(get_firebase_user_from_token)):
-    # Log the ingredients to verify it's being received
-    print("Received ingredients:", ingredients)
-    
-    # Send request to Spoonacular API
-    response = requests.get(SPOONACULAR_API_URL, params={
+
+    response = requests.get(params={
         "ingredients": ingredients,
         "apiKey": SPOONACULAR_API_KEY,
-        "number": 10
+        "number": 5
     })
 
-    # Check if the request was successful
+
     if response.status_code == 200:
         recipes = response.json()
-        return {"recipes": recipes}
+
+        if not recipes:  
+            raise HTTPException(status_code=404, detail="No recipes found from Spoonacular")
+
+        # Convert Spoonacular's response into Recipe objects
+        recipe_list = []
+        for recipe in recipes:
+            ingredients_list = [
+                Ingredient(name=ing["name"]) for ing in recipe.get('usedIngredients', []) + recipe.get('missedIngredients', [])
+            ]
+            recipe_data = Recipe(
+                title=recipe['title'],
+                ingredients=ingredients_list,
+                source_url=recipe.get('sourceUrl')  # Corrected field
+            )
+            recipe_list.append(recipe_data)
+
+        return recipe_list
+
     else:
-        # Log the response content for debugging
-        print("Spoonacular API error:", response.text)
-        raise HTTPException(status_code=500, detail="Failed to fetch recipes from Spoonacular")
+        raise HTTPException(status_code=response.status_code, detail=f"Spoonacular API Error: {response.text}")

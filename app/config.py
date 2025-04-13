@@ -19,6 +19,7 @@ load_dotenv(basedir / ".env")
 # see: https://github.com/tiangolo/fastapi/pull/2120
 bearer_scheme = HTTPBearer(auto_error=False)
 UPC_KEY = os.getenv('UPC_KEY')
+SPOONACULAR_API_KEY = os.getenv("SPOONACULAR_API_KEY")
 
 class Settings(BaseSettings):
     """Main settings"""

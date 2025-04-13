@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from typing import Annotated
-from app.schemas.ingredient import Ingredient
+from app.schemas.basemodels.ingredient import Ingredient
 from app.services.lookup import lookup
 from app.config import get_firebase_user_from_token
 from app.db.ingredients import *

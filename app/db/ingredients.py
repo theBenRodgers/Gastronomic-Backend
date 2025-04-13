@@ -1,5 +1,5 @@
 import sqlite3
-from app.schemas.ingredient import Ingredient
+from app.schemas.basemodels.ingredient import Ingredient
 
 def get_db_connection():
     conn = sqlite3.connect(r"C:\Gastronomic-Backend\sql\gastronomic.db")
