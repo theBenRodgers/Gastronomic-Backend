@@ -1,10 +1,6 @@
 import sqlite3
-from app.schemas.basemodels.ingredient import Ingredient
-
-def get_db_connection():
-    conn = sqlite3.connect(r"C:\Gastronomic-Backend\sql\gastronomic.db")
-    conn.row_factory = sqlite3.Row
-    return conn
+from app.db.connect import get_db_connection
+from app.schemas.models.ingredient import Ingredient
 
 def insert_ingredient(uid : str, ingredient : Ingredient):
     conn = get_db_connection()

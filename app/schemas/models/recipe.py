@@ -1,22 +1,30 @@
 from pydantic import BaseModel
 from typing import List, Optional
-from .ingredient import Ingredient
+
+from app.schemas.models.instruction import Instruction
+from app.schemas.models.pantry_item import PantryItem
+
 
 class Recipe(BaseModel):
     id: int
+    name: str
     image: str
-    imageType: str
-    likes: int
-    missedIngredientCount: int
-    missedIngredients: List[Ingredient]
-    title: str
-    ingredients: List[Ingredient]
-    instructions: str
-    prep_time: Optional[int] = None
-    cook_time: Optional[int] = None
+
     servings: Optional[int] = None
-    calories: Optional[int] = None
-    protein: Optional[int] = None
-    fat: Optional[int] = None
-    carbs: Optional[int] = None
-    source_url: Optional[str] = None
+    readyInMinutes: Optional[int] = None
+    preparationMinutes: Optional[int] = None
+    cookingMinutes: Optional[int] = None
+
+    ingredients: Optional[List[PantryItem]] = None
+    missedIngredientCount: Optional[int] = None
+    missedIngredients: Optional[List[PantryItem]] = None
+    usedIngredientCount: Optional[int] = None
+    usedIngredients: Optional[List[PantryItem]] = None
+
+    instructions: Optional[List[Instruction]] = None
+
+    cuisines: Optional[List[str]] = None
+    dishTypes: Optional[List[str]] = None
+    occasions: Optional[List[str]] = None
+
+    sourceUrl: Optional[str] = None

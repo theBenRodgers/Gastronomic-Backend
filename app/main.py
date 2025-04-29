@@ -4,6 +4,8 @@ import firebase_admin
 
 from app.config import get_settings
 from app.routers.ingredients import router as ingredients_router
+from app.routers.products import router as products_router
+
 from app.routers.recipes import router as recipes_router
 
 app = FastAPI()
@@ -11,6 +13,7 @@ app = FastAPI()
 # Include routers
 app.include_router(ingredients_router)
 app.include_router(recipes_router)
+app.include_router(products_router)
 
 settings = get_settings()
 origins = [settings.frontend_url]

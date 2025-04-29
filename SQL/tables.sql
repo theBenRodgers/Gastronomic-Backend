@@ -1,17 +1,43 @@
-CREATE TABLE ingredients (
-    ingredient_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    user_id TEXT NOT NULL,
+CREATE TABLE users (
+    user_id TEXT PRIMARY KEY NOT NULL,
+    fname TEXT NOT NULL,
+    lname TEXT NOT NULL,
+    intolerances TEXT,
+    diets TEXT
+)
+
+CREATE TABLE pantry (
+    pantry_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    kind TEXT NOT NULL,
+    id INTEGER NOT NULL,
+
     name TEXT,
+    image TEXT,
     brand TEXT,
-    servings INTEGER NOT NULL,
-    amount INTEGER NOT NULL,
+    imageType TEXT,
+
+    unit TEXT,
+    possibleUnits TEXT,
+    estimatedCost FLOAT,
+    shoppingListUnits TEXT,
+    aisle TEXT,
+    categoryPath TEXT,
+    weightPerServing TEXT,
+
+    upc TEXT,
+    price FLOAT,
+
+
     calories INTEGER,
-    protein INTEGER,
     fat INTEGER,
-    carbs INTEGER
+    protein INTEGER,
+    carbs INTEGER,
+    amount INTEGER,
+    expirationDate TEXT,
+
+    user_id TEXT NOT NULL
 );
 
--- Recipes Table
 CREATE TABLE IF NOT EXISTS recipes (
     recipe_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     user_id TEXT NOT NULL,           

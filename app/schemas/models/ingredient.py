@@ -5,12 +5,14 @@ from app.schemas.enums.aisle import Aisle
 from app.schemas.enums.badge import Badge
 
 class Ingredient(BaseModel):
-    spoonacular_id: int
-    title: str
+    id: Optional[int]
+    name: str
+
+    brand: Optional[str]
     image: Optional[str]
-    aisle: Aisle
+    aisle: Optional[str]
     badges: List[Badge]
-    brand: str
+    
     expiration: Optional[List[datetime.date]]
     servings: float | None = 1
     amount: float | None = 0
