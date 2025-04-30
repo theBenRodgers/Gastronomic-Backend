@@ -1,6 +1,6 @@
 import requests
 from app.config import UPC_KEY
-from app.schemas.ingredient import Ingredient
+from app.schemas.basemodels.ingredient import Ingredient
 
 def lookup(upc):
 

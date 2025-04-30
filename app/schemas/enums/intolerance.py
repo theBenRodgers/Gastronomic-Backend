@@ -1,0 +1,15 @@
+from enum import Enum
+
+class Intolerance(Enum):
+    DAIRY = "dairy"
+    EGG = "egg"
+    GLUTEN = "gluten"
+    GRAIN = "grain"
+    PEANUT = "peanut"
+    SEAFOOD = "seafood"
+    SESAME = "sesame"
+    SHELLFISH = "shellfish"
+    SOY = "soy"
+    SULFITE = "sulfite"
+    TREE_NUT = "tree nut"
+    WHEAT = "wheat"
