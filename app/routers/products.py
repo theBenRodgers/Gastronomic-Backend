@@ -13,6 +13,6 @@ async def search_products(user: Annotated[dict, Depends(get_firebase_user_from_t
     return info
 
 @router.get("products/upc")
-async def search_upc(user: Annotated[dict, Depends(get_firebase_user_from_token)], upc: int):
-    info = prod_by_upc(upc)
+async def search_upc(user: Annotated[dict, Depends(get_firebase_user_from_token)], upc: str):
+    info = prod_by_upc(int(upc))
     return info
