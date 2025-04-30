@@ -33,11 +33,7 @@ def product_search(query: str, page):
             "carbs": nutrients.get('carbohydrates')
         }
         results.append(result)
-    return {
-        "results": results,
-        "page": page,
-        "totalPages": totalPages
-    }
+    return results
 
 
 def prod_by_upc(upc: int):

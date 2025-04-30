@@ -1,61 +1,66 @@
-from typing import List
+import sqlite3
+from typing import List, Optional
 from app.db.connect import get_db_connection
 from app.schemas.models.user import User
 
-def create_user(uid: str, user: User):
+def insert_user(uid: str, user: User) -> None:
     conn = get_db_connection()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("""
         INSERT INTO users (user_id, fname, lname, intolerances, diets)
-        VALUES (?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, ?);
     """, (
         uid,
         user.fname,
         user.lname,
-        user.intolerances,
-        user.diets,
+        ",".join(user.intolerances) if user.intolerances else "",
+        ",".join(user.diets) if user.diets else "",
     ))
 
     conn.commit()
     cursor.close()
     conn.close()
 
-def select_user(uid: str) -> User:
+def select_user(uid: str) -> Optional[User]:
     conn = get_db_connection()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT * FROM users
+        SELECT user_id, fname, lname, intolerances, diets
+        FROM users
         WHERE user_id = ?;
     """, (uid,))
 
-    row = cursor.fetchone()[0]
+    row = cursor.fetchone()
+    cursor.close()
     conn.close()
+
+    if row is None:
+        return None
 
     return User(
         fname=row["fname"],
         lname=row["lname"],
-        intolerances=row["intolerances"].split(
-            ",") if row["intolerances"] else None,
-        diets=row["diets"].split(
-            ",") if row["diets"] else None
+        intolerances=row["intolerances"].split(",") if row["intolerances"] else [],
+        diets=row["diets"].split(",") if row["diets"] else []
     )
 
-
-def update_user(uid: str, user: User):
+def update_user(uid: str, user: User) -> None:
     conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
-        UPDATE user
-        SET fname = ?, lnane = ?, intolerances = ?, diets = ?
+        UPDATE users
+        SET fname = ?, lname = ?, intolerances = ?, diets = ?
         WHERE user_id = ?;
     """, (
         user.fname,
         user.lname,
-        ",".join(user.intolerances) if user.intolerances else None,
-        ",".join(user.diets) if user.diets else None,
+        ",".join(user.intolerances) if user.intolerances else "",
+        ",".join(user.diets) if user.diets else "",
         uid
     ))
 
@@ -63,14 +68,15 @@ def update_user(uid: str, user: User):
     cursor.close()
     conn.close()
 
-def delete_user(uid: str):
+def delete_user(uid: str) -> None:
     conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         DELETE FROM users
         WHERE user_id = ?;
-    """, (uid))
+    """, (uid,))
 
     conn.commit()
+    cursor.close()
     conn.close()

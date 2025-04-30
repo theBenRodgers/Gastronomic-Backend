@@ -122,11 +122,7 @@ def search_recipes(query: str,
         )
         recipes.append(recipe)
 
-    return {
-        "results": data.get("results"),
-        "page": page,
-        "totalPages": totalPages
-    }
+    return recipes
 
 
 def recipe_by_id(id: int):

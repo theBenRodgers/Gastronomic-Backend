@@ -1,26 +1,32 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
-from app.services.lookup import lookup
-from app.config import get_firebase_user_from_token
-from app.db.user import *
+
+from app.db.users_table import *
 from app.schemas.models.user import User
+from app.config import get_firebase_user_from_token
 
 router = APIRouter()
 
-@router.get("/user")
+@router.get("/user", response_model=User)
 async def get_user(user: Annotated[dict, Depends(get_firebase_user_from_token)]):
     uid = user["uid"]
-    data = select_user(uid)[0]
-    return data
+    user = select_user(uid)
+    return user
 
 @router.post("/user")
-async def create_user(user: Annotated[dict, Depends(get_firebase_user_from_token)], u: User):
+async def create_user_endpoint(user: Annotated[dict, Depends(get_firebase_user_from_token)], u: User):
     uid = user["uid"]
-    insert_user(uid, u)
-    return {'result' : 'User Created'}
+    insert_user(uid)
+    return {"result": "User created"}
 
 @router.put("/user")
-async def change_user(user: Annotated[dict, Depends(get_firebase_user_from_token)], u: User):
+async def update_user(user: Annotated[dict, Depends(get_firebase_user_from_token)], u: User):
     uid = user["uid"]
     update_user(uid, u)
-    return {'result' : 'User Updated'}
+    return {"result": "User updated"}
+
+@router.delete("/user")
+async def delete_user(user: Annotated[dict, Depends(get_firebase_user_from_token)]):
+    uid = user["uid"]
+    delete_user(uid)
+    return {"result": "User deleted"}

@@ -4,29 +4,16 @@ from typing import Annotated
 from app.config import get_firebase_user_from_token
 from app.db.pantry_table import *
 from app.schemas.models.pantry_item import PantryItem
-from app.schemas.models.pantry_list import PantryList
+
 
 
 router = APIRouter()
 
 @router.get("/pantry")
-async def get_pantry(user: Annotated[dict, Depends(get_firebase_user_from_token)], 
-                     page: int, per_page: int):
+async def get_pantry(user: Annotated[dict, Depends(get_firebase_user_from_token)], ):
     uid = user["uid"]
-    number = per_page
-    offset = (page - 1) * per_page
-    results = select_pantry(uid, number, offset)
-
-    count = count_pantry(uid)
-    totalPages = count // per_page
-    if (count % per_page) > 0:
-        totalPages = totalPages + 1
-
-    return PantryList(
-        results=results,
-        page=page,
-        totalPages=totalPages
-    )
+    results = select_pantry(uid)
+    return results
 
 @router.get("/pantry/item")
 async def get_pantry(user: Annotated[dict, Depends(get_firebase_user_from_token)], 

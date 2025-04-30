@@ -3,18 +3,16 @@ from app.db.connect import get_db_connection
 from app.schemas.models.pantry_item import PantryItem
 
 
-def select_pantry(uid: str, number: int, offset: int) -> List[PantryItem]:
+def select_pantry(uid: str) -> List[PantryItem]:
     conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
         SELECT 
-            kind, id, name, image, brand, imageType
+            *
         FROM pantry
         WHERE user_id = ?
-        ORDER BY pantry_id DESC
-        LIMIT ? OFFSET ?;
-    """, (uid, number, offset))
+    """, (uid,))
 
     rows = cursor.fetchall()
     conn.close()
@@ -28,11 +26,31 @@ def select_pantry(uid: str, number: int, offset: int) -> List[PantryItem]:
             name=row["name"],
             image=row["image"],
             brand=row["brand"],
-            imageType=row["imageType"]
+            imageType=row["imageType"],
+            unit=row["unit"],
+            possibleUnits=row["possibleUnits"].split(
+                ",") if row["possibleUnits"] else None,
+            estimatedCost=row["estimatedCost"],
+            shoppingListUnits=row["shoppingListUnits"].split(
+                ",") if row["shoppingListUnits"] else None,
+            aisle=row["aisle"],
+            categoryPath=row["categoryPath"].split(
+                ",") if row["categoryPath"] else None,
+            weightPerServing=float(
+                row["weightPerServing"]) if row["weightPerServing"] else None,
+            upc=row["upc"],
+            price=row["price"],
+            calories=row["calories"],
+            fat=row["fat"],
+            protein=row["protein"],
+            carbs=row["carbs"],
+            amount=row["amount"],
+            expirationDate=row["expirationDate"]
         )
         pantry_items.append(pantry_item)
 
     return pantry_items
+
 
 def count_pantry(uid) -> int:
     conn = get_db_connection()
@@ -49,7 +67,6 @@ def count_pantry(uid) -> int:
     return count
 
 
-
 def select_pantry_item(uid: str, pantry_id: int) -> PantryItem:
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -63,7 +80,7 @@ def select_pantry_item(uid: str, pantry_id: int) -> PantryItem:
     conn.close()
 
     return PantryItem(
-        pantry_id = row["pantry_id"],
+        pantry_id=row["pantry_id"],
         kind=row["kind"],
         id=row["id"],
         name=row["name"],
@@ -141,6 +158,7 @@ def create_pantry_item(uid: str, item: PantryItem):
     conn.commit()
     conn.close()
 
+
 def update_pantry_item(uid: str, item: PantryItem):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -182,6 +200,7 @@ def update_pantry_item(uid: str, item: PantryItem):
 
     conn.commit()
     conn.close()
+
 
 def delete_pantry_item(uid: str, pantry_id: int):
     conn = get_db_connection()

@@ -41,11 +41,7 @@ def ingredient_search(query: str, page):
         }
         results.append(result)
 
-    return {
-        "results": results,
-        "page": page,
-        "totalPages": totalPages
-    }
+    return results
 
 
 def ingredient_info(id: int):
