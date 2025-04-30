@@ -2,6 +2,7 @@ from app.api.spoonacular.make_request import *
 from app.schemas.models.instruction import Instruction
 from app.schemas.models.pantry_item import PantryItem
 from app.schemas.models.recipe import Recipe
+from app.schemas.models.nutrition import Nutrition, Nutrient
 
 
 def search_recipes(query: str,
@@ -131,4 +132,48 @@ def search_recipes(query: str,
 
 def recipe_by_id(id: int):
     url = f"https://api.spoonacular.com/recipes/{id}/information"
-    data = make_request(url)
+    params = {
+        "includeNutrition": True
+    }
+    data = make_request("GET", url, params)
+
+    # Parse nutrients
+    nutrients_data = data.get("nutrition", {}).get("nutrients", [])
+    nutrients = [
+        Nutrient(
+            name=n["name"],
+            amount=n["amount"],
+            unit=n["unit"],
+            percentOfDailyNeeds=n.get("percentOfDailyNeeds")
+        ) for n in nutrients_data
+    ]
+    nutrition = Nutrition(nutrients=nutrients)
+
+    # Optionally parse instructions (simplified version)
+    instructions = []
+    for instr_block in data.get("analyzedInstructions", []):
+        for step in instr_block.get("steps", []):
+            instructions.append(Instruction(
+                number=step.get("number"),
+                step=step.get("step"),
+                ingredients=[]  # you can fill this in too if desired
+            ))
+
+    recipe = Recipe(
+        id=data.get("id"),
+        name=data.get("title"),
+        image=data.get("image"),
+        servings=data.get("servings"),
+        readyInMinutes=data.get("readyInMinutes"),
+        preparationMinutes=data.get("preparationMinutes"),
+        cookingMinutes=data.get("cookingMinutes"),
+        ingredients=[],  # Fill if you want detailed ingredient data
+        instructions=instructions,
+        cuisines=data.get("cuisines"),
+        dishTypes=data.get("dishTypes"),
+        occasions=data.get("occasions"),
+        sourceUrl=data.get("sourceUrl"),
+        nutrition=nutrition
+    )
+
+    return recipe

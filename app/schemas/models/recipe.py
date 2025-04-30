@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from app.schemas.models.instruction import Instruction
 from app.schemas.models.pantry_item import PantryItem
+from app.schemas.models.nutrition import Nutrition
 
 
 class Recipe(BaseModel):
@@ -22,6 +23,7 @@ class Recipe(BaseModel):
     usedIngredients: Optional[List[PantryItem]] = None
 
     instructions: Optional[List[Instruction]] = None
+    nutrition: Optional[Nutrition] = None
 
     cuisines: Optional[List[str]] = None
     dishTypes: Optional[List[str]] = None

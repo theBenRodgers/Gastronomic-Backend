@@ -4,4 +4,4 @@ __pycache__/
 
 # Ignore sensitive information
 .env
-service-account.json
+service-account.jsongastronomic.db
