@@ -2,6 +2,7 @@ import sqlite3
 from app.db.connect import get_db_connection
 from app.schemas.models.ingredient import Ingredient
 
+
 def insert_ingredient(uid : str, ingredient : Ingredient):
     conn = get_db_connection()
     cursor = conn.cursor()
