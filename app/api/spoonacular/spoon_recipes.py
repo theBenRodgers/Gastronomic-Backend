@@ -4,29 +4,21 @@ from app.schemas.models.pantry_item import PantryItem
 from app.schemas.models.recipe import Recipe
 
 
-def search_recipes(query: str,
-                   cuisine: str,
-                   diets: str,
-                   intolerances: str,
-                   includeIngredients: str,
-                   mtype: str,
-                   page: int):
+def spoon_r_s(includeIngredients: str):
     url = "https://api.spoonacular.com/recipes/complexSearch"
-    offset = (page * NUMBER) - NUMBER
     params = {
-        "query": query,
-        "cuisine": cuisine,
-        "diet": diets,
-        "intolerances": intolerances,
+        'apiKey': SPOONACULAR_API_KEY,
+        "query": "",
+        "cuisine": "",
+        "diet": "",
+        "intolerances": "",
         "includeIngredients": includeIngredients,
-        "type": mtype,
+        "type": "",
         "fillIngredients": True,
         "addRecipeInformation": True,
-        "addRecipeInstructions": True,
-        "offset": offset,
-        "number": NUMBER
+        "addRecipeInstructions": True
     }
-    data = make_request("GET", url, params)
+    data = make_request(url, params)
     totalPages = data["totalResults"] // NUMBER
     if (data["totalResults"] % NUMBER > 0):
         totalPages = totalPages + 1
